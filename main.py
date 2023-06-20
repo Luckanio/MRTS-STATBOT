@@ -83,9 +83,9 @@ async def check_patchnotes():
     global old
     variable = patchnotes.PrintChanges(
         old, patchnotes.TableToDict("https://pastebin.com/raw/xchHf3Gp"))
-    if (len(variable) > 0):
+    if (len(variable.fields()) > 0):
         channel = bot.get_channel(1109558632292556903)
-        await channel.send(variable)
+        await channel.send(embed = variable)
         old = patchnotes.TableToDict("https://pastebin.com/raw/xchHf3Gp")
         await channel.send("DMNKS has changed some stats <@763582841866682368> <@246824672367345674> <@621516858205405197>")
 
@@ -160,14 +160,14 @@ async def on_message(message):
 
     if message.content.startswith(';patchnotes'):
         if len(message.content) == 11:
-            await message.channel.send(patchnotes.PrintChanges(patchnotes.TableToDict(old), patchnotes.TableToDict("https://pastebin.com/raw/xchHf3Gp")))
+            await message.channel.send(embed = patchnotes.PrintChanges(patchnotes.TableToDict(old), patchnotes.TableToDict("https://pastebin.com/raw/xchHf3Gp")))
         else:
             content = message.content[12:]
             pattern = r'^https?://(?:www\.)?pastebin\.com/raw/[a-zA-Z0-9]+$'
             if (re.match(pattern, content) is None):
                 await message.channel.send("i get the feeling that's not a patebin link")
             else:
-                await message.channel.send(patchnotes.PrintChanges(patchnotes.TableToDict(content), patchnotes.TableToDict("https://pastebin.com/raw/xchHf3Gp")))
+                await message.channel.send(embed = patchnotes.PrintChanges(patchnotes.TableToDict(content), patchnotes.TableToDict("https://pastebin.com/raw/xchHf3Gp")))
         if message.author.id == 263351384466784257:
             await message.channel.send("you know what would be cool? if you did this already for us")
 

@@ -1,5 +1,7 @@
 from slpp import slpp as lua
 import requests
+from discord import Embed
+
 
 inverse = {"Damage", "MaxHealth", "Range", "Speed", "SplashRange",
            "AddHealth", "AddBuildings", "GiveCash", "AddUnits"}
@@ -15,16 +17,18 @@ def TableToDict(pastebinURL):
 
 
 def PrintChanges(old, updated):
-    changes = ""
+    embed = Embed()
+    embed.title = "Patch Notes"
     for thing in old:
         if thing in updated:
+            changes = ""
             for attribute in old[thing]:
                 changes += checkAttribute(old, updated, thing, attribute)
+            if len(changes) > 0:
+                embed.add_field(name=thing, value=changes)
         else:
-            changes += f"* {thing} removed\n"
-    if len(changes) > 0:
-        changes = "```" + changes + "```"
-    return changes
+            embed.add_field(name=thing)
+    return embed
 
 
 def checkAttribute(old, updated, thing, attribute):
@@ -38,9 +42,9 @@ def checkAttribute(old, updated, thing, attribute):
                     signWord = "increased"
                 case "-":
                     signWord = "decreased"
-            changes += f"{sign} {thing}'s {attribute} {signWord} from {old[thing][attribute]} to {updated[thing][attribute]}\n"
+            changes = f'{sign} {attribute} {signWord} from {old[thing][attribute]} to {updated[thing][attribute]}\n'
     else:
-        changes += f"* {attribute} from {thing} removed"
+        changes = f'{attribute} from {thing} removed'
     return changes
 
 def isGood(attribute, old, new):
@@ -49,12 +53,12 @@ def isGood(attribute, old, new):
         if attribute in inverse:
             sign = "+"
         elif attribute in verse:
-            sign = "-"
+            sign = "\-"
         else:
             sign = "\*"
     else:
         if attribute in inverse:
-            sign = "-"
+            sign = "\-"
         elif attribute in verse:
             sign = "+"
         else:

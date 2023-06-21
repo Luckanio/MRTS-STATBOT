@@ -135,10 +135,12 @@ async def on_message(message):
 
         eloSystem(str(both_userids[0]), valuePlayerOne)
         eloSystem(str(both_userids[0]), valuePlayerTwo)
-
-        valuePlayerTwo = calculateEloRating(
-            two_users[1], two_users[0], eloCounterPlayerTwo)
-        await message.channel.send(f"<@{both_userids[0]}> your new elo is {valuePlayerOne}, other player's elo is {valuePlayerTwo}")
+        sign = ["",""]
+        if valuePlayerOne > two_users[0]:
+            sign[0] = "+"
+        if valuePlayerTwo > two_users[1]:
+            sign[1] = "+"
+        await message.channel.send(f"<@{both_userids[0]}> your new elo is {two_users[0]} -> {valuePlayerOne} {sign[0]}{valuePlayerOne-two_users[0]}, other player's elo is {two_users[1]} -> {valuePlayerTwo} {sign[1]}{valuePlayerTwo-two_users[1]}")
     if message.content.startswith(";help"):
         embed = Embed()
         embed.title = "Help"
